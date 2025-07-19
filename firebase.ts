@@ -4,7 +4,7 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD_EU4boc112wNlcaQK2nuFK5NezLyCPaM",
+  apiKey: "notforu",
   authDomain: "cognisync-b7a39.firebaseapp.com",
   projectId: "cognisync-b7a39",
   storageBucket: "cognisync-b7a39.firebasestorage.app",
