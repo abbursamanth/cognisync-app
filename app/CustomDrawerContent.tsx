@@ -1,0 +1,156 @@
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import { useRouter } from 'expo-router';
+import { Alert, StyleSheet, Text, View, Platform } from 'react-native';
+import { BlurView } from 'expo-blur';
+import { auth } from '../firebase';
+
+export default function CustomDrawerContent(props: any) {
+  const user = auth.currentUser;
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    try {
+      await auth.signOut();
+      router.replace('/signin');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to sign out.');
+    }
+  };
+
+  const currentDate = new Date().toLocaleDateString('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric'
+  });
+
+  return (
+    <BlurView intensity={120} tint="default" style={StyleSheet.absoluteFill}>
+      <DrawerContentScrollView {...props} style={styles.drawerContent}>
+        {/* Digital timestamp header */}
+        <View style={styles.timestamp}>
+          <Text style={styles.timestampText}>{currentDate}</Text>
+          <View style={styles.dots}>
+            <View style={styles.dot} />
+            <View style={styles.dot} />
+            <View style={styles.dot} />
+          </View>
+        </View>
+        {/* Menu Items */}
+        <View style={styles.drawerItems}>
+          <DrawerItem
+            label="Home"
+            onPress={() => router.push('/dashboard')}
+            labelStyle={styles.drawerLabel}
+            style={styles.drawerItem}
+            pressColor="rgba(255,255,255,0.1)"
+          />
+          <DrawerItem
+            label="About"
+            onPress={() => router.push('/about')}
+            labelStyle={styles.drawerLabel}
+            style={styles.drawerItem}
+            pressColor="rgba(255,255,255,0.1)"
+          />
+          <DrawerItem
+            label="Journal"
+            onPress={() => router.push('/journaling')}
+            labelStyle={styles.drawerLabel}
+            style={styles.drawerItem}
+            pressColor="rgba(255,255,255,0.1)"
+          />
+          <DrawerItem
+            label="Goals"
+            onPress={() => router.push('/goalTracker')}
+            labelStyle={styles.drawerLabel}
+            style={styles.drawerItem}
+            pressColor="rgba(255,255,255,0.1)"
+          />
+          <DrawerItem
+            label="Sessions"
+            onPress={() => router.push('/sessionHistory')}
+            labelStyle={styles.drawerLabel}
+            style={styles.drawerItem}
+            pressColor="rgba(255,255,255,0.1)"
+          />
+          <DrawerItem
+            label="Feedback"
+            onPress={() => router.push('/feedback')}
+            labelStyle={styles.drawerLabel}
+            style={styles.drawerItem}
+            pressColor="rgba(255,255,255,0.1)"
+          />
+        </View>
+        {/* Footer */}
+        <View style={styles.footer}>
+          <DrawerItem
+            label="Sign Out"
+            onPress={handleSignOut}
+            labelStyle={[styles.drawerLabel, { color: '#fff', opacity: 0.6 }]}
+            style={styles.drawerItem}
+            pressColor="rgba(255,255,255,0.1)"
+          />
+        </View>
+      </DrawerContentScrollView>
+    </BlurView>
+  );
+}
+
+const styles = StyleSheet.create({
+  // Removed overlay for pure glass effect
+  drawerContent: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+  drawerItems: {
+    paddingTop: 20,
+    paddingHorizontal: 16,
+  },
+  drawerItem: {
+    backgroundColor: 'transparent',
+    marginVertical: 2,
+    borderRadius: 0,
+    maxWidth: '100%',
+  },
+  drawerLabel: {
+    color: '#fff',
+    fontSize: 12,
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    opacity: 0.7,
+  },
+  footer: {
+    marginTop: 'auto',
+    paddingTop: 20,
+    paddingHorizontal: 16,
+    paddingBottom: 20,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.1)',
+  },
+  timestamp: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    marginBottom: 20,
+  },
+  timestampText: {
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
+    fontSize: 11,
+    color: '#fff',
+    opacity: 0.7,
+    letterSpacing: 0.5,
+  },
+  dots: {
+    flexDirection: 'row',
+    gap: 4,
+  },
+  dot: {
+    width: 3,
+    height: 3,
+    borderRadius: 1.5,
+    backgroundColor: '#fff',
+    opacity: 0.5,
+  },
+});
